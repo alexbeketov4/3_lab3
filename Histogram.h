@@ -1,60 +1,112 @@
 #pragma once
 #include <iostream>
-#include <vector>
 #include <string>
+#include <cctype>
 #include <sstream>
-#include <stdexcept>
 #include "DictionaryOnSequence.h"
-#include "LinkedListSequence.h"
-
+#include "SortedSequenceOnSequence.h"
+ 
 template <class T>
 class Histogram
 {
-public:
-
-    DictionaryOnSequence<std::string, int> CreateHistogram(Sequence<T>& seq, int range, const std::string& crit)
+private:
+    LinkedListSequence<std::string> generateLetterGroups(int range)
     {
+        std::string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        int numGroups = (25 + range) / range;
+        LinkedListSequence<std::string> groups;
+
+        for (int i = 0; i < numGroups; i++)
+        {
+            int start = i * range;
+            int end = std::min(start + range - 1, 25);
+            std::string group = std::string(1, alphabet[start]) + "-" + std::string(1, alphabet[end]);
+            groups.Append(group);
+        }
+
+        return groups;
+    }
+public:
+    DictionaryOnSequence<std::string, int> CreateHistogram(SortedSequenceOnSequence<T>& seq, int range, const std::string& crit)
+    {
+        if (range <= 0)
+        {
+            throw "Range must be a positive integer";
+        }
+
         DictionaryOnSequence<std::string, int> histogram;
 
         for (int i = 0; i < seq.GetLength(); ++i)
         {
             T element = seq.Get(i);
-            int value = 0;
+            std::string key;
 
             if (crit == "yearOfBirth")
             {
-                value = element.GetYearOfBirth();
+                int value = element.GetYearOfBirth();
+                int lowerBound = (value / range) * range;
+                int upperBound = lowerBound + range;
+                std::ostringstream rangeKey;
+                rangeKey << "[" << lowerBound << "-" << upperBound << "]";
+                key = rangeKey.str();
             }
+
             else if (crit == "height")
             {
-                value = static_cast<int>(element.GetHeight());
+                int value = int(element.GetHeight());
+                int lowerBound = (value / range) * range;
+                int upperBound = lowerBound + range;
+                std::ostringstream rangeKey;
+                rangeKey << "[" << lowerBound << "-" << upperBound << "]";
+                key = rangeKey.str();
             }
+
             else if (crit == "weight")
             {
-                value = static_cast<int>(element.GetWeight());
-            }
-            else
-            {
-                throw std::invalid_argument("Invalid criterion specified");
+                int value = int(element.GetWeight());
+                int lowerBound = (value / range) * range;
+                int upperBound = lowerBound + range;
+                std::ostringstream rangeKey;
+                rangeKey << "[" << lowerBound << "-" << upperBound << "]";
+                key = rangeKey.str();
             }
 
-            int lowerBound = (value / range) * range;
-            int upperBound = lowerBound + range;
-            std::ostringstream rangeKey;
-            rangeKey << "[" << lowerBound << "-" << upperBound << "]";
-
-            if (histogram.ContainsKey(rangeKey.str()))
+            else if (crit == "firstNameLetter" || crit == "lastNameLetter")
             {
-                int n = histogram.Get(rangeKey.str());
-                histogram.Remove(rangeKey.str());
-                histogram.Add(rangeKey.str(), n + 1);
+                LinkedListSequence<std::string> groups = generateLetterGroups(range);
+                std::string name = (crit == "firstNameLetter") ? element.GetFirstname() : element.GetLastname();
+
+                if (!name.empty() && std::isalpha(name[0]))
+                {
+                    char letter = std::toupper(name[0]);
+                    int position = letter - 'A';
+                    int groupIndex = position / range;
+                    key = groups.Get(groupIndex);
+                }
+
+                else
+                {
+                    key = "N/A";
+                }
             }
+
             else
             {
-                histogram.Add(rangeKey.str(), 1);
+                throw std::runtime_error("Invalid criterion specified");
+            }
+
+            if (histogram.ContainsKey(key))
+            {
+                int count = histogram.Get(key);
+                histogram.Remove(key);
+                histogram.Add(key, count + 1);
+            }
+
+            else
+            {
+                histogram.Add(key, 1);
             }
         }
-
         return histogram;
     }
 

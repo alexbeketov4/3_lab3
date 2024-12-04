@@ -3,6 +3,7 @@
 
 template <class T>
 using Comparator = std::function<bool(const T&, const T&)>;
+
 template <class T>
 class ISortedSequence
 {
@@ -19,7 +20,7 @@ public:
 
 	virtual int IndexOf(T element) const = 0;
 
-	virtual ISortedSequence<T>* GetSubsequence(int startiIndex, int endIndex) const = 0;
+	virtual ISortedSequence<T>* GetSubsequence(int startIndex, int endIndex) const = 0;
 
 	virtual void Add(T element) = 0;
 };

@@ -49,6 +49,14 @@ public:
         }
     };
 
+    struct FirstnameComparator
+    {
+        bool operator()(const Person& a, const Person& b) const
+        {
+            return a.firstName < b.firstName;
+        }
+    };
+
     struct WeightComparator
     {
         bool operator()(const Person& a, const Person& b) const
@@ -64,4 +72,13 @@ public:
             return a.height < b.height;
         }
     };
+
+    bool operator==(const Person& other) const
+    {
+        return (this->yearOfBirth == other.yearOfBirth &&
+            this->firstName == other.firstName &&
+            this->lastName == other.lastName &&
+            this->height == other.height &&
+            this->weight == other.weight);
+    }
 };

@@ -14,7 +14,8 @@ public:
     SparseVector(int size, T defaultValue)
         : dictionary(), size(size), defaultValue(defaultValue) {}
 
-    SparseVector(T defaultValue) : dictionary(), size(0), defaultValue(defaultValue) {}
+    SparseVector(T defaultValue) 
+        : dictionary(), size(0), defaultValue(defaultValue) {}
 
     SparseVector(SparseVector<T>& other)
         : dictionary(other.dictionary), size(other.size), defaultValue(other.defaultValue) {}
