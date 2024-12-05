@@ -1,7 +1,6 @@
 #pragma once
 #include "IDictionary.h"
-#include "LinkedListSequence.h"
-#include <stdexcept>
+#include "ArraySequence.h"
 
 template<typename TKey, typename TElement>
 class DictionaryOnSequence : public IDictionary<TKey, TElement> 
@@ -17,7 +16,7 @@ private:
         KeyValuePair(TKey key, TElement value) : key(key), value(value) {}
     };
 
-    LinkedListSequence<KeyValuePair> list;
+    ArraySequence<KeyValuePair> list;
     int capacity;
 
 public:
@@ -42,14 +41,14 @@ public:
                 return list.Get(i).value;
             }
         }
-        throw std::out_of_range("Key not found");
+        throw "Key not found";
     }
 
     KeyValuePair GetByIndex(int index) const
     {
         if (index < 0 || index >= list.GetLength())
         {
-            throw std::out_of_range("Index out of range");
+            throw "Index out of range";
         }
         return list.Get(index);
     }
@@ -68,10 +67,10 @@ public:
 
     void Add(TKey key, TElement element) override 
     {
-        /*if (ContainsKey(key)) 
+        if (ContainsKey(key)) 
         {
-            throw std::invalid_argument("Key already exists");
-        }*/
+            throw "Key already exists";
+        }
         if (GetCount() >= capacity) 
         {
             capacity *= 2;
@@ -89,6 +88,6 @@ public:
                 return;
             }
         }
-        throw std::out_of_range("Key not found");
+        throw "Key not found";
     }
 };

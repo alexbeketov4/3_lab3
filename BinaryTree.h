@@ -188,7 +188,7 @@ private:
         }
     }
 
-    bool Ñompare(Node<T>* node1, Node<T>* node2) const
+    bool Compare(Node<T>* node1, Node<T>* node2) const
     {
         if (node1 == nullptr && node2 == nullptr)
         {
@@ -199,7 +199,7 @@ private:
         {
             return false;
         }
-        return (node1->GetData() == node2->GetData()) && Ñompare(node1->GetLeft(), node2->GetLeft()) && Ñompare(node1->GetRight(), node2->GetRight());
+        return (node1->GetData() == node2->GetData()) && Compare(node1->GetLeft(), node2->GetLeft()) && Compare(node1->GetRight(), node2->GetRight());
     }
 
     bool SearchSubtree(Node<T>* node1, Node<T>* node2) const
@@ -214,7 +214,7 @@ private:
             return false;
         }
 
-        if (Ñompare(node1, node2))
+        if (Compare(node1, node2))
         {
             return true;
         }
@@ -333,7 +333,7 @@ private:
     {
         if (index >= CountNodes(node) || index < 0 || !node)
         {
-            throw std::out_of_range("Index out of range");
+            throw "Index out of range";
         }
 
         size_t leftSize = CountNodes(node->GetLeft());
@@ -350,6 +350,31 @@ private:
         {
             return Get(node->GetRight(), index - leftSize - 1);
         }
+    }
+
+    bool SearchBool(Node<T>* startRoot, const T& value) const
+    {
+        if (startRoot == nullptr)
+        {
+            return false;
+        }
+        if (startRoot->GetData() == value)
+        {
+            return true;
+        }
+        if (value <= startRoot->GetData())
+        {
+            return SearchBool(startRoot->GetLeft(), value);
+        }
+        else
+        {
+            return SearchBool(startRoot->GetRight(), value);
+        }
+    }
+
+    Node<T>* GetRoot() const
+    {
+        return this->root;
     }
 
 public:
@@ -376,35 +401,14 @@ public:
         DeleteTree(this->GetRoot());
     }
 
-    Node<T>* GetRoot() const
+    /*Node<T>* GetRoot() const
     {
         return this->root;
-    }
+    }*/
 
-
-    Node<T>* Search(const T& val) const
+    bool SearchBool(const T& value) const
     {
-        return Search(root, val);
-    }
-
-    bool SearchBool(Node<T>* startRoot, const T& value) const
-    {
-        if (startRoot == nullptr)
-        {
-            return false;
-        }
-        if (startRoot->GetData() == value)
-        {
-            return true;
-        }
-        if (value <= startRoot->GetData())
-        {
-            return SearchBool(startRoot->GetLeft(), value);
-        }
-        else
-        {
-            return SearchBool(startRoot->GetRight(), value);
-        }
+        return SearchBool(root, value);
     }
 
     BinaryTree<T>* SubTree(const T& val) const
@@ -426,7 +430,7 @@ public:
     {
         if (!root)
         {
-            throw std::out_of_range("Tree is empty");
+            throw "Tree is empty";
         }
         return Get(root, index);
     }

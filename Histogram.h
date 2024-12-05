@@ -92,7 +92,7 @@ public:
 
             else
             {
-                throw std::runtime_error("Invalid criterion specified");
+                throw "Invalid criterion specified";
             }
 
             if (histogram.ContainsKey(key))

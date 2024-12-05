@@ -40,7 +40,7 @@ public:
 
 	bool Contains(const T& item) const override
 	{
-		return tree.SearchBool(tree.GetRoot(), item);
+		return tree.SearchBool(item);
 	}
 
 	bool SubSet(const ISet<T>* other) const override

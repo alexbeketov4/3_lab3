@@ -25,7 +25,7 @@ public:
     {
         if (sequence.GetLength() > size) 
         {
-            throw std::invalid_argument("Sequence length exceeds vector size");
+            throw "Sequence length exceeds vector size";
         }
 
         for (int i = 0; i < sequence.GetLength(); ++i) 
@@ -41,7 +41,7 @@ public:
     {
         if (index < 0 || index >= size) 
         {
-            throw std::out_of_range("Index out of range");
+            throw "Index out of range";
         }
 
         if (value == defaultValue) 
@@ -66,7 +66,7 @@ public:
     {
         if (index < 0 || index >= size) 
         {
-            throw std::out_of_range("Index out of range");
+            throw "Index out of range";
         }
         if (dictionary.ContainsKey(index)) 
         {

@@ -58,7 +58,7 @@ public:
 		this->items.Set(item, index);
 	}
 
-	void RemoveAt(int index) 
+	void RemoveAt(int index)
 	{
 		this->items.RemoveAt(index);
 	}

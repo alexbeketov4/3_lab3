@@ -1,5 +1,4 @@
 #pragma once
-#pragma once
 #include "LinkedListSequence.h"
 #include "ISortedSequence.h"
 
@@ -74,17 +73,13 @@ public:
 		return -1;
 	}
 
-	/*SortedSequenceOnSequence<T>* GetSubsequence(int startIndex, int endIndex) const override
-	{
-		SortedSequenceOnSequence<T>* sub_seq = new SortedSequenceOnSequence<T>(*this->list.GetSubsequence(startIndex, endIndex));
-		return sub_seq;
-	}*/
-
 	SortedSequenceOnSequence<T>* GetSubsequence(int startIndex, int endIndex) const override
 	{
-		LinkedListSequence<T> subList = *(this->list.GetSubsequence(startIndex, endIndex));
-		SortedSequenceOnSequence<T>* sub_seq = new SortedSequenceOnSequence<T>(subList, comp);
-		return sub_seq;
+		LinkedListSequence<T>* subList = this->list.GetSubsequence(startIndex, endIndex);
+		SortedSequenceOnSequence<T>* subSeq = new SortedSequenceOnSequence<T>(*subList, comp);
+
+		delete subList;
+		return subSeq;
 	}
 
 	void Add(T element) override
