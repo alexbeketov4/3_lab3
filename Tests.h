@@ -1,6 +1,8 @@
 #pragma once
 #include "LinkedList.h"
 #include "LinkedListSequence.h"
+#include "DictionaryOnSequence.h"
+#include "SortedSequenceOnSequence.h"
 #include "ArraySequence.h"
 #include "Person.h"
 #include "BinaryTree.h"
@@ -18,145 +20,6 @@ int array8[7] = { 11, 1, 2, 3, 4, 5, 22 };
 int array9[2] = { 1, 2 };
 int array10[2] = { 2, 1 };
 int array11[1] = { 1 };
-
-
-
-//LinkedListSequence
-
-void Test_of_GetLastLinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-	assert(list.GetLast() == array1[4]);
-}
-
-void Test_of_GetFirst_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-	assert(list.GetFirst() == array1[0]);
-}
-
-void Test_of_GetLength_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-	assert(list.GetLength() == 5);
-}
-
-void Test_of_Get_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-	for (int i = 0; i != list.GetLength(); i++)
-	{
-		assert(list.Get(i) == array1[i]);
-	}
-}
-
-void Test_of_GetSubsequence_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-
-	for (int i = 0; i != 5; i++)
-	{
-		for (int j = i + 1; j != 5; j++)
-		{
-			LinkedListSequence<int> sub = *(list.GetSubsequence(i, j));
-			assert(sub.GetLength() == j - i + 1);
-			for (int x = i; x < j; x++)
-			{
-				assert(array1[x] == sub.Get(x - i));
-			}
-		}
-	}
-}
-
-void Test_of_Append_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-
-	list.Append(6);
-	assert(list.GetLength() == 6);
-	for (int i = 0; i != list.GetLength(); i++)
-	{
-		assert(list.Get(i) == array3[i]);
-	}
-}
-
-void Test_of_Prepend_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-
-	list.Prepend(0);
-	assert(list.GetLength() == 6);
-	for (int i = 0; i != list.GetLength(); i++)
-	{
-		assert(list.Get(i) == array4[i]);
-	}
-}
-
-void Test_of_InsertAt_LinkedListSequence()
-{
-	LinkedListSequence<int>empty_list;
-	empty_list.InsertAt(1, 0);
-	assert(empty_list.GetLength() == 1);
-	assert(empty_list.Get(0) == 1);
-
-	LinkedListSequence<int>list1(array11, 1);
-	list1.InsertAt(2, 0);
-	assert(list1.GetLength() == 2);
-	for (int i = 0; i != list1.GetLength(); i++)
-	{
-		assert(list1.Get(i) == array10[i]);
-	}
-
-	LinkedListSequence<int>list2(array11, 1);
-	list2.InsertAt(2, 1);
-	assert(list2.GetLength() == 2);
-	for (int i = 0; i != list2.GetLength(); i++)
-	{
-		assert(list2.Get(i) == array9[i]);
-	}
-
-	LinkedListSequence<int>list(array1, 5);
-	list.InsertAt(11, 0);
-	assert(list.GetLength() == 6);
-	for (int i = 0; i != list.GetLength(); i++)
-	{
-		assert(list.Get(i) == array7[i]);
-	}
-
-	list.InsertAt(22, list.GetLength());
-	assert(list.GetLength() == 7);
-	for (int i = 0; i != list.GetLength(); i++)
-	{
-		assert(list.Get(i) == array8[i]);
-	}
-
-	list.InsertAt(33, 2);
-	assert(list.GetLength() == 8);
-	for (int i = 0; i != list.GetLength(); i++)
-	{
-		assert(list.Get(i) == array5[i]);
-	}
-}
-
-
-void Test_of_Concat_LinkedListSequence()
-{
-	LinkedListSequence<int>list(array1, 5);
-	LinkedListSequence<int> con_list = *(list.Concat(&list));
-	assert(con_list.GetLength() == 10);
-
-	for (int i = 0; i != 10; i++)
-	{
-		assert(array6[i] == con_list.Get(i));
-	}
-
-	LinkedListSequence<int>list1;
-	LinkedListSequence<int> con_list1 = *(list.Concat(&list1));
-	for (int i = 0; i != 5; i++)
-	{
-		assert(array1[i] == con_list1.Get(i));
-	}
-}
 
 //Array
 
@@ -461,7 +324,148 @@ void Test_BinTree_SearchBool_Int()
 
 // SortedSequence
 
+void Test_SortedSequence_Add() 
+{
+	SortedSequenceOnSequence<int> seq;
+
+	seq.Add(5);
+	seq.Add(3);
+	seq.Add(7);
+
+	assert(seq.GetLength() == 3);
+	assert(seq.Get(0) == 3);
+	assert(seq.Get(1) == 5);
+	assert(seq.Get(2) == 7);
+}
+
+void Test_SortedSequence_Get() 
+{
+	SortedSequenceOnSequence<int> seq;
+	seq.Add(10);
+	seq.Add(20);
+	seq.Add(15);
+
+	assert(seq.Get(0) == 10);
+	assert(seq.Get(1) == 15);
+	assert(seq.Get(2) == 20);
+}
+
+void Test_SortedSequence_GetLength() 
+{
+	SortedSequenceOnSequence<int> seq;
+	seq.Add(1);
+	seq.Add(2);
+	seq.Add(3);
+
+	assert(seq.GetLength() == 3);
+}
+
+void Test_SortedSequence_GetFirstAndLast() 
+{
+	SortedSequenceOnSequence<int> seq;
+	seq.Add(30);
+	seq.Add(10);
+	seq.Add(20);
+
+	assert(seq.GetFirst() == 10);
+	assert(seq.GetLast() == 30);
+}
+
+void Test_SortedSequence_IsEmpty() 
+{
+	SortedSequenceOnSequence<int> seq;
+	assert(seq.IsEmpty() == true);
+
+	seq.Add(1);
+	assert(seq.IsEmpty() == false);
+}
+
+void Test_SortedSequence_IndexOf() 
+{
+	SortedSequenceOnSequence<int> seq;
+	seq.Add(10);
+	seq.Add(20);
+	seq.Add(30);
+
+	assert(seq.IndexOf(20) == true); 
+	assert(seq.IndexOf(25) == -1);
+}
+
+void Test_SortedSequence_GetSubsequence() 
+{
+	SortedSequenceOnSequence<int> seq;
+	seq.Add(10);
+	seq.Add(20);
+	seq.Add(30);
+	seq.Add(40);
+	seq.Add(50);
+
+	auto* subSeq = seq.GetSubsequence(1, 3);
+	assert(subSeq->GetLength() == 3);
+	assert(subSeq->Get(0) == 20);
+	assert(subSeq->Get(1) == 30);
+	assert(subSeq->Get(2) == 40);
+
+	delete subSeq;
+}
+
 //Dictionary
+
+void Test_DictionaryOnSequence_Add() 
+{
+	DictionaryOnSequence<int, std::string> dict;
+
+	dict.Add(1, "one");
+	dict.Add(2, "two");
+	dict.Add(3, "three");
+
+	assert(dict.GetCount() == 3);
+	assert(dict.Get(1) == "one");
+	assert(dict.Get(2) == "two");
+	assert(dict.Get(3) == "three");
+}
+
+void Test_DictionaryOnSequence_Get() 
+{
+	DictionaryOnSequence<int, std::string> dict;
+	dict.Add(1, "one");
+	dict.Add(2, "two");
+
+	assert(dict.Get(1) == "one");
+	assert(dict.Get(2) == "two");
+}
+
+void Test_DictionaryOnSequence_ContainsKey() 
+{
+	DictionaryOnSequence<int, std::string> dict;
+	dict.Add(1, "one");
+	dict.Add(2, "two");
+
+	assert(dict.ContainsKey(1) == true);
+	assert(dict.ContainsKey(3) == false);
+}
+
+void Test_DictionaryOnSequence_Remove() 
+{
+	DictionaryOnSequence<int, std::string> dict;
+	dict.Add(1, "one");
+	dict.Add(2, "two");
+
+	dict.Remove(1);
+	assert(dict.GetCount() == 1);
+	assert(dict.ContainsKey(1) == false);
+}
+
+void Test_DictionaryOnSequence_GetByIndex() 
+{
+	DictionaryOnSequence<int, std::string> dict;
+	dict.Add(1, "one");
+	dict.Add(2, "two");
+
+	auto pair = dict.GetByIndex(1);
+	assert(pair.key == 2);
+	assert(pair.value == "two");
+}
 
 //Set
 
