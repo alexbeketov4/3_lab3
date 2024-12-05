@@ -3,6 +3,9 @@
 #include "LinkedListSequence.h"
 #include "DictionaryOnSequence.h"
 #include "SortedSequenceOnSequence.h"
+#include "SparseVector.h"
+#include "Histogram.h"
+#include "SetOnBinaryTree.h"
 #include "ArraySequence.h"
 #include "Person.h"
 #include "BinaryTree.h"
@@ -469,4 +472,184 @@ void Test_DictionaryOnSequence_GetByIndex()
 
 //Set
 
+void Test_SetOnBinaryTree_Insert() 
+{
+	SetOnBinaryTree<int> set;
+
+	set.Insert(10);
+	set.Insert(5);
+	set.Insert(15);
+
+	assert(set.GetLength() == 3);
+	assert(set.Contains(10) == true);
+	assert(set.Contains(5) == true);
+	assert(set.Contains(15) == true);
+}
+
+void Test_SetOnBinaryTree_Delete() 
+{
+	SetOnBinaryTree<int> set;
+	set.Insert(10);
+	set.Insert(5);
+	set.Insert(15);
+
+	set.Delete(10);
+	assert(set.GetLength() == 2);
+	assert(set.Contains(10) == false);
+}
+
+void Test_SetOnBinaryTree_Get() 
+{
+	int arr[] = { 10, 5, 15 };
+	SetOnBinaryTree<int> set(arr, 3);
+
+	assert(set.Get(0) == 5); 
+	assert(set.Get(1) == 10);
+	assert(set.Get(2) == 15);
+}
+
+void Test_SetOnBinaryTree_Contains() 
+{
+	SetOnBinaryTree<int> set;
+	set.Insert(10);
+	set.Insert(20);
+
+	assert(set.Contains(10) == true);
+	assert(set.Contains(5) == false);
+}
+
+void Test_SetOnBinaryTree_SubSet() 
+{
+	int arr1[] = { 10, 5, 15 };
+	int arr2[] = { 5, 15 };
+	int arr3[] = { 20, 30 };
+
+	SetOnBinaryTree<int> set1(arr1, 3);
+	SetOnBinaryTree<int> set2(arr2, 2);
+	SetOnBinaryTree<int> set3(arr3, 2);
+
+	assert(set1.SubSet(&set2) == true); 
+	assert(set1.SubSet(&set3) == false);
+}
+
 //SparceVector
+void Test_SparseVector_Constructor() 
+{
+	SparseVector<int> vector(10, 0);
+	assert(vector.GetNonZeroCount() == 0);
+	for (int i = 0; i < 10; ++i) {
+		assert(vector.Get(i) == 0);
+	}
+
+	int arr[4] = {0, 5, 0, 10};
+	ArraySequence<int> sequence(arr, 4);
+	SparseVector<int> vectorFromSeq(sequence, 6, 0);
+	assert(vectorFromSeq.Get(0) == 0);
+	assert(vectorFromSeq.Get(1) == 5);
+	assert(vectorFromSeq.Get(3) == 10);
+	assert(vectorFromSeq.GetNonZeroCount() == 2);
+}
+
+void Test_SparseVector_SetAndGet() 
+{
+	SparseVector<int> vector(5, 0);
+
+	vector.Set(0, 10);
+	vector.Set(3, 20);
+
+	assert(vector.Get(0) == 10);
+	assert(vector.Get(3) == 20);
+	assert(vector.Get(2) == 0);
+
+	vector.Set(0, 0);
+	assert(vector.Get(0) == 0);
+	assert(vector.GetNonZeroCount() == 1);
+}
+
+void Test_SparseVector_Append() 
+{
+	SparseVector<int> vector(0);
+	vector.Append(0); 
+	vector.Append(10);
+	vector.Append(0);
+	vector.Append(20);
+
+	assert(vector.GetNonZeroCount() == 2);
+	assert(vector.Get(1) == 10);
+	assert(vector.Get(3) == 20);
+}
+
+void Test_CreateHistogram_YearOfBirth() 
+{
+	Person p1(1980, "Alice", "Smith", 170, 70 );
+	Person p2(1985, "Bob", "Johnson", 165, 60);
+	Person p3(1990, "Charlie", "Williams", 180, 80);
+	Person p4(1995, "David", "Brown", 160, 55);
+	SortedSequenceOnSequence<Person> seq;
+	seq.Add(p1);
+	seq.Add(p2);
+	seq.Add(p3);
+	seq.Add(p4);
+
+	Histogram<Person> hist;
+	DictionaryOnSequence<std::string, int> histogram = hist.CreateHistogram(seq, 10, "yearOfBirth");
+
+	assert(histogram.GetCount() == 2);
+	assert(histogram.Get("[1980-1990]") == 2);
+	assert(histogram.Get("[1990-2000]") == 2);
+}
+
+void Test_CreateHistogram_Height() 
+{
+	Person p1(1980, "Alice", "Smith", 169, 70);
+	Person p2(1985, "Bob", "Johnson", 165, 60);
+	Person p3(1990, "Charlie", "Williams", 180, 80);
+	Person p4(1995, "David", "Brown", 160, 55);
+	SortedSequenceOnSequence<Person> seq;
+	seq.Add(p1);
+	seq.Add(p2);
+	seq.Add(p3);
+	seq.Add(p4);
+
+	Histogram<Person> hist;
+	DictionaryOnSequence<std::string, int> histogram = hist.CreateHistogram(seq, 5, "height");
+
+	assert(histogram.GetCount() == 3);
+	assert(histogram.Get("[160-165]") == 1);
+	assert(histogram.Get("[165-170]") == 2);
+	assert(histogram.Get("[180-185]") == 1);
+}
+
+void Test_CreateHistogram_FirstNameLetter() 
+{
+	Person p1(1980, "Alice", "Smith", 169, 70);
+	Person p2(1985, "Bob", "Johnson", 165, 60);
+	Person p3(1990, "Charlie", "Williams", 180, 80);
+	Person p4(1995, "David", "Brown", 160, 55);
+	SortedSequenceOnSequence<Person> seq;
+	seq.Add(p1);
+	seq.Add(p2);
+	seq.Add(p3);
+
+	Histogram<Person> hist;
+	DictionaryOnSequence<std::string, int> histogram = hist.CreateHistogram(seq, 3, "firstNameLetter");
+
+	assert(histogram.GetCount() == 2);
+	assert(histogram.Get("A-C") == 2);
+	assert(histogram.Get("D-F") == 1);
+}
+
+void Test_CreateHistogramInt() 
+{
+	int arr[] = { 10, 20, 25, 30, 35, 40 };
+	LinkedListSequence<int>list(arr, 6);
+	SortedSequenceOnSequence<int> seq(list);
+
+	Histogram<int> hist;
+	DictionaryOnSequence<std::string, int> histogram = hist.CreateHistogramInt(seq, 10);
+
+	assert(histogram.GetCount() == 3);
+	assert(histogram.Get("[10-20]") == 1);
+	assert(histogram.Get("[20-30]") == 2);
+	assert(histogram.Get("[30-40]") == 3);
+}
