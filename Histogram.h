@@ -110,6 +110,37 @@ public:
         return histogram;
     }
 
+    DictionaryOnSequence<std::string, int> CreateHistogramInt(SortedSequenceOnSequence<T>& seq, int range) 
+    {
+        if (range <= 0) {
+            throw "Range must be a positive integer";
+        }
+
+        DictionaryOnSequence<std::string, int> histogram;
+
+        for (int i = 0; i < seq.GetLength(); ++i) 
+        {
+            T element = seq.Get(i);
+            int lowerBound = (element / range) * range;
+            int upperBound = lowerBound + range;
+            std::ostringstream rangeKey;
+            rangeKey << "[" << lowerBound << "-" << upperBound << "]";
+            std::string key = rangeKey.str();
+
+            if (histogram.ContainsKey(key)) 
+            {
+                int count = histogram.Get(key);
+                histogram.Remove(key);
+                histogram.Add(key, count + 1);
+            }
+            else 
+            {
+                histogram.Add(key, 1);
+            }
+        }
+        return histogram;
+    }
+
     void PrintHistogram(const DictionaryOnSequence<std::string, int>& histogram)
     {
         for (int i = 0; i < histogram.GetCount(); ++i)
